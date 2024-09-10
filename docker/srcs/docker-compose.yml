@@ -1,0 +1,13 @@
+services:
+  mariadb:
+    volumes:
+      - mariadb:srcs/mariadb/Dockerfile
+    ports:
+      - 3306
+  nginx:
+    volumes:
+      - nginx:srcs/nginx/Dockerfile
+
+  wordpress:
+    volumes:
+      - wordpress:srcs/wordpress/Dockerfile
