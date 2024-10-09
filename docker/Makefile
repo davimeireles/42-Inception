@@ -1,16 +1,37 @@
 
-# To start all the services defined in your compose.yaml file
-up:
-	docker compose -p docker-compose.yml up
+up: build
+	docker compose --file srcs/docker-compose.yaml up -d
 
-# To stop and remove the running services
+re: down build up
+
+fullre: fclean up
+
+stop:
+	docker compose --file srcs/docker-compose.yaml stop
+
 down:
-	docker compose -p docker-compose.yml down
+	docker compose --file srcs/docker-compose.yaml down
 
-# Monitoring the output of your running containers and debug issues
 logs:
-	docker compose -p docker-compose.yml logs
+	docker compose --file srcs/docker-compose.yaml logs
 
-# To lists all the services along with their current status
 ps:
-	docker compose -p docker-compose.yml ps
+	docker compose --file srcs/docker-compose.yaml ps
+
+restart:
+	docker compose --file srcs/docker-compose.yaml restart
+
+volumes:
+	@if [ ! -d "/home/dmeirele/data/mariadb" ] && [ ! -d "/home/dmeirele/data/wordpress;" ]; then \
+	mkdir -p /home/dmeirele/data/mariadb && mkdir -p /home/dmeirele/data/wordpress; fi
+
+build: volumes
+	docker compose --file srcs/docker-compose.yaml build
+	
+clean:
+	docker system prune -a
+
+volume_free:
+	docker volume prune -a
+
+fclean: down clean volume_free
